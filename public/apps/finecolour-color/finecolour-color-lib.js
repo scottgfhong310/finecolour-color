@@ -36,6 +36,9 @@
   var FOLDER = 'finecolour-color';
   var SORT_MODES = ['code', 'hue', 'lightness', 'hex', 'family'];
 
+  // 0 號是無色調和筆（Colorless Blender），沒有顏料——比對器預設把它排除，見 nearestFinecolour。
+  var BLENDER_CODE = '0';
+
   // 灰階與無彩的色系代碼（品牌自己的分群）。**不用飽和度猜**——Finecolour 自己講了。
   var ACHROMATIC = ['CG', 'NG', 'TG', 'YG-gray', 'WG', 'PG', 'SG', 'BG-gray', 'GG', 'BCDSG', 'A'];
 
@@ -206,12 +209,18 @@
    * **預設只比 marker 那 480 色**——彩針筆是另一種筆（水性、針管尖），
    * 拿它回答「該用哪支麥克筆」是答非所問。要比彩針筆就傳 `space:'fineliner'`。
    * opts.line 可再限定產品線（`'EF101'` 只比 2 代有出的 188 色）——**手上沒有的筆別推薦**。
+   *
+   * **預設排除 0 號無色調和筆**（`#ffffff`，沒有顏料，用途是暈染／推色）。
+   * 不排除的話白色與近白色的第一名永遠是它——ΔE 完美，但「用調和筆畫白」是錯的答案。
+   * 同一條原則的另一種樣子：比對器不該推薦一支畫不出那個顏色的筆。
+   * 真要把它算進來（例如做完整色域統計）傳 `blender:true`。
    */
   function nearestFinecolour(rgb, opts) {
     opts = opts || {};
     var pool = opts.colors || global.FINECOLOUR_COLORS || [];
     var space = opts.space === undefined ? 'marker' : opts.space;
     if (space) pool = pool.filter(function (c) { return c.space === space; });
+    if (!opts.blender) pool = pool.filter(function (c) { return c.code !== BLENDER_CODE; });
     if (opts.line) {
       pool = pool.filter(function (c) { return (c.lines || []).indexOf(opts.line) >= 0; });
     }
@@ -309,6 +318,7 @@
     FOLDER: FOLDER,
     SORT_MODES: SORT_MODES,
     ACHROMATIC: ACHROMATIC,
+    BLENDER_CODE: BLENDER_CODE,
     filter: filter,
     sortColors: sortColors,
     isAchromatic: isAchromatic,
