@@ -16,6 +16,7 @@ G=/Users/Shared/nodeapp/GitHub
 I=/Users/Shared/nodeapp/InProgress
 SRC=$G/finecolour-color/public/apps/finecolour-color
 DST=$I/public/apps/finecolour-color
+FAIL=0
 
 echo "=== 整包前端 → InProgress 鏡像（只同步程式碼）==="
 mkdir -p "$DST"
@@ -27,7 +28,7 @@ if diff -rq "$SRC" "$DST" > /dev/null; then
 else
   echo "  MISMATCH  以下有差異："
   diff -rq "$SRC" "$DST"
-  exit 1
+  FAIL=1
 fi
 
 echo "=== 共用件 hash（應與家族其餘複製點一致）==="
@@ -42,7 +43,7 @@ echo "=== 2) lib + 資料 → color-palette / thangka-trace（含各自的 InPro
 # 資料本身是 db_artcolor 的匯出產物（見 DESIGN.md §3），本段只負責散佈、不產生。
 for app in color-palette thangka-trace; do
   for dst in "$G/$app/public/apps/$app" "$I/public/apps/$app"; do
-    [ -d "$dst" ] || { echo "  MISSING $dst"; continue; }
+    [ -d "$dst" ] || { echo "  MISSING $dst"; FAIL=1; continue; }
     cp "$SRC/finecolour-color-lib.js" "$dst/finecolour-color-lib.js"
     cp "$SRC/data/finecolour-colors.js" "$dst/data/finecolour-colors.js"
   done
@@ -52,7 +53,8 @@ verify() {   # $1=檔名相對路徑, 其餘=所有複製點
   local label=$1; shift
   local n
   n=$(md5 -r "$@" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
-  if [ "$n" = "1" ]; then echo "  OK  $label — $# 份單一 hash"; else echo "  MISMATCH  $label — $n 種 hash"; fi
+  if [ "$n" = "1" ]; then echo "  OK        $label — $# 份單一 hash"
+  else echo "  MISMATCH  $label — $n 種 hash"; md5 -r "$@"; FAIL=1; fi
 }
 
 echo
@@ -72,3 +74,7 @@ verify "data/finecolour-colors.js" \
   "$I/public/apps/finecolour-color/data/finecolour-colors.js" \
   "$I/public/apps/color-palette/data/finecolour-colors.js" \
   "$I/public/apps/thangka-trace/data/finecolour-colors.js"
+
+echo
+if [ "$FAIL" -eq 0 ]; then echo "全部通過。"; else echo "有項目不一致（見上）。"; fi
+exit "$FAIL"
