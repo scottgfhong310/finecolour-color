@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Finecolour 套組收錄對照</title>
+
+  <!-- App icon / favicon / PWA（設計附件；icons/ 內，一律相對路徑，獨立版與 InProgress 鏡像共用）§5.5 -->
+  <link rel="icon" href="./icons/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon-light.svg" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png" />
+  <link rel="manifest" href="./icons/manifest.json" />
+  <meta name="theme-color" content="#0f1115" />
+
+  <script>
+    try {
+      var t = localStorage.getItem('finecolour-color-theme') || 'dark';
+      var r = document.documentElement;
+      r.dataset.theme = t;
+      r.classList.toggle('dark-mode', t === 'dark');
+      r.classList.toggle('light-mode', t === 'light');
+    } catch (e) { }
+  </script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="./materialize-dark.css" />
+  <link rel="stylesheet" href="./finecolour-color.css" />
+  <link rel="stylesheet" href="./sets.css" />
+  <link rel="stylesheet" href="./side-tool.css" />
+</head>
+
+<body data-i18n-doctitle="sets.title">
+  <main>
+    <div class="app-container wide">
+      <!-- 固定 Header：捲動時產品線切換與目前基準組一直看得到（形制同 faber-castell-color） -->
+      <header class="page-head" id="page-head">
+        <div class="head-title">
+          <h1 data-i18n="sets.title">Finecolour 套組收錄對照</h1>
+          <div class="sub" data-i18n="sets.sub">選一個套組 → 只留下它收錄的色 → 橫向看其他套組有沒有涵蓋</div>
+        </div>
+        <!-- 產品線切換（取代原本的兩個下拉選單）：點一條只留那一段，再點一次回到全部 -->
+        <div class="line-tabs" id="line-tabs"></div>
+        <div class="picked" id="picked"></div>
+      </header>
+
+      <div class="legend" data-i18n="sets.incomplete">
+        ＊ 該產品另含非色筆品項（Multiliner／Glitter Pen／指南），此處只記色筆
+      </div>
+
+      <section class="matrix-sec" id="matrix"></section>
+
+      <p class="matrix-foot" id="matrix-foot"></p>
+    </div>
+  </main>
+
+  <div class="side-tools">
+    <a id="setting-back" class="side-tool" href="./index.html"
+       data-i18n-title="sets.back" title="回色票頁"><i class="material-icons">grid_on</i></a>
+    <div id="setting-nearest" class="side-tool" data-i18n-title="tool.nearest" title="找最接近的 Finecolour 色">
+      <i class="material-icons">colorize</i>
+    </div>
+    <div id="setting-mode" class="side-tool" data-i18n-title="tool.mode" title="切換 light / dark">
+      <i class="material-icons">dark_mode</i>
+    </div>
+    <div id="setting-lang" class="side-tool" data-i18n-title="tool.lang" title="Language">
+      <i class="material-icons">translate</i>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="./finecolour-color-lib.js"></script>
+  <script src="./data/finecolour-colors.js"></script>
+  <script src="./data/finecolour-sets.js"></script>
+  <script src="./i18n.js"></script>
+  <script src="./locales/zh-Hant.js"></script>
+  <script src="./locales/en.js"></script>
+  <script src="./locales/ja.js"></script>
+  <script src="./side-tool.js"></script>
+  <script src="./colour-detail.js"></script>
+  <script src="./nearest-panel.js"></script>
+  <script src="./sets.js"></script>
+</body>
+</html>

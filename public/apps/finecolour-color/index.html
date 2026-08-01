@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="dark">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>Finecolour Color → CSS</title>
+
+  <!-- App icon / favicon / PWA（設計附件；icons/ 內，一律相對路徑，獨立版與 InProgress 鏡像共用）§5.5 -->
+  <link rel="icon" href="./icons/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon-light.svg" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png" />
+  <link rel="manifest" href="./icons/manifest.json" />
+  <meta name="theme-color" content="#0f1115" />
+
+  <!-- 防主題閃爍：render 前先讀 localStorage 設好 data-theme 與 dark-mode/light-mode class（§5.1 坑） -->
+  <script>
+    try {
+      var t = localStorage.getItem('finecolour-color-theme') || 'dark';
+      var r = document.documentElement;
+      r.dataset.theme = t;
+      r.classList.toggle('dark-mode', t === 'dark');
+      r.classList.toggle('light-mode', t === 'light');
+    } catch (e) { }
+  </script>
+
+  <!-- Materialize 1.0.0 + Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <!-- Materialize 元件深色（家族共用；在 materialize.css 之後、本頁樣式之前） -->
+  <link rel="stylesheet" href="./materialize-dark.css" />
+
+  <link rel="stylesheet" href="./finecolour-color.css" />
+  <link rel="stylesheet" href="./side-tool.css" />
+  <link rel="stylesheet" href="./filter-clear.css" />   <!-- 共用 utility：搜尋框「清除」× 鈕 -->
+</head>
+
+<body data-i18n-doctitle="title.page">
+
+  <main>
+    <div class="app-container">
+
+      <div class="topbar">
+        <div>
+          <h1 data-i18n="app.title">Finecolour 色號 → CSS</h1>
+          <div class="sub" data-i18n="app.sub">依色系與產品線瀏覽 528 色；色票取自製造商官方宣傳單，為螢幕近似值</div>
+        </div>
+        <div class="search-wrap">
+          <i class="material-icons">search</i>
+          <input id="search" type="text" autocomplete="off" spellcheck="false"
+                 data-i18n-placeholder="search.placeholder" placeholder="色號或色名…" data-filter-clear />
+          <span id="count" class="count"></span>
+        </div>
+      </div>
+
+      <!-- 分組 chips（單選）：全部 → 23 個官方色系 → 彩針筆（另一個色號空間） -->
+      <div id="families" class="family-bar group-chips" role="group" aria-label="Colour family"></div>
+
+      <!-- 篩選 chips（多選、帶勾號）：哪幾代產品線有出這支色 -->
+      <div id="lines" class="line-bar" role="group" aria-label="Product line"></div>
+
+      <section id="grid" class="flat-list" aria-live="polite"></section>
+
+      <div id="no-result" class="no-result" style="display:none" data-i18n="search.empty">找不到符合的顏色</div>
+
+    </div>
+  </main>
+
+  <!-- ===== 右側工具列（flex 容器：正統版） ===== -->
+  <div class="side-tools">
+    <div id="setting-nearest" class="side-tool" data-i18n-title="tool.nearest" title="找最接近的 Finecolour 色">
+      <i class="material-icons">colorize</i>
+    </div>
+    <a id="setting-sets" class="side-tool" href="./sets.html" target="_blank"
+       data-i18n-title="tool.sets" title="套組收錄對照（另開分頁）">
+      <i class="material-icons">widgets</i>
+    </a>
+    <div id="setting-css" class="side-tool" data-i18n-title="tool.css" title="檢視 / 複製整份 CSS">
+      <i class="material-icons">code</i>
+    </div>
+    <div id="setting-download" class="side-tool" data-i18n-title="tool.download" title="下載 finecolour_colors.css">
+      <i class="material-icons">file_download</i>
+    </div>
+    <div id="setting-mode" class="side-tool" data-i18n-title="tool.mode" title="切換 light / dark">
+      <i class="material-icons">dark_mode</i>
+    </div>
+    <div id="setting-lang" class="side-tool" data-i18n-title="tool.lang" title="Language">
+      <i class="material-icons">translate</i>
+    </div>
+  </div>
+
+  <!-- ===== CSS 匯出 Modal ===== -->
+  <div id="css-modal" class="modal css-modal">
+    <div class="modal-content">
+      <h5 data-i18n="css.title">CSS 變數 + utility classes</h5>
+      <div class="css-sub" id="css-sub"></div>
+      <pre id="css-pre"></pre>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" id="css-copy" class="waves-effect btn-flat"><i class="material-icons left">content_copy</i><span data-i18n="css.copy">複製全部</span></a>
+      <a href="#!" id="css-download" class="waves-effect btn-flat"><i class="material-icons left">file_download</i><span data-i18n="css.download">下載 .css</span></a>
+      <a href="#!" class="modal-close waves-effect btn-flat" data-i18n="detail.close">關閉</a>
+    </div>
+  </div>
+
+  <!-- 依賴：jQuery / Materialize / FinecolourColorLib + 資料 -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="./finecolour-color-lib.js"></script>
+  <script src="./data/finecolour-colors.js"></script>
+  <script src="./data/finecolour-sets.js"></script>
+
+  <!-- i18n 引擎 + 語言字典（先引擎再各語系；新增語言＝多一個 locale 檔） -->
+  <script src="./i18n.js"></script>
+  <script src="./locales/zh-Hant.js"></script>
+  <script src="./locales/en.js"></script>
+  <script src="./locales/ja.js"></script>
+
+  <script src="./filter-clear.js"></script>   <!-- 共用 utility：搜尋框清除鈕 -->
+  <script src="./side-tool.js"></script>      <!-- 共用 utility：側鍵行為（check 微回饋＋溢出收納） -->
+  <script src="./colour-detail.js"></script>  <!-- 兩頁共用：色票明細 Modal -->
+  <script src="./nearest-panel.js"></script>  <!-- 兩頁共用：最接近色側欄 -->
+  <script src="./finecolour-color.js"></script>
+</body>
+
+</html>

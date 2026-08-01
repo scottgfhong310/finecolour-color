@@ -1,0 +1,15 @@
+{
+  "name": "finecolour-color",
+  "version": "1.0.0",
+  "description": "Finecolour marker & fineliner colour codes → CSS variables: 528 colours by family and product line, with 43 assortments",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": ["finecolour", "marker", "color", "colour", "css", "palette", "reference", "express", "materialize"],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "morgan": "^1.10.0"
+  }
+}

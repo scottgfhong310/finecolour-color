@@ -1,0 +1,28 @@
+{
+  "name": "finecolour-color",
+  "short_name": "Finecolour colour",
+  "description": "Finecolour colour code → CSS reference, browsed along the Finecolour Color System's three axes.",
+  "start_url": "/apps/finecolour-color/",
+  "scope": "/apps/finecolour-color/",
+  "display": "standalone",
+  "background_color": "#0f1115",
+  "theme_color": "#0f1115",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

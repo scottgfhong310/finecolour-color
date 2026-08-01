@@ -1,0 +1,354 @@
+/* finecolour-color — 本頁樣式 + 主題 token（§5.1）
+ * Materialize 元件深色交給 materialize-dark.css；此檔只管非 Materialize 的自訂元素。
+ * 注意：色票（.cp-swatch）保留 Finecolour 真實顏色，不隨主題重著色（§4.7「內容本身即設計」）。
+ */
+
+/* ===== 主題 token（light / dark，預設 dark） ===== */
+:root, [data-theme="dark"] {
+  --bg:#0f1115; --surface:#161a22; --surface-2:#1b2030;
+  --text:#e8eaf0; --muted:#a8b0c0; --border:rgba(255,255,255,.12);
+  --accent:#90caf9; --card-bg:#0f1115;
+  --tool-bg:#1b2030; --tool-fg:#e8eaf0;
+  --overlay:rgba(10,14,22,.84); --drop-border:#3a4252;
+  --axis-head:#a8b0c0; --cell-empty:rgba(255,255,255,.045);
+  --accent-on:#0b1220;                 /* 疊在 --accent 上的字色（深色的 accent 是淡藍 → 用暗字） */
+  --chip-hover:rgba(255,255,255,.07);
+}
+[data-theme="light"] {
+  --bg:#f6f8fa; --surface:#fff; --surface-2:#eef1f5;
+  --text:#1f2328; --muted:#57606a; --border:rgba(0,0,0,.12);
+  --accent:#0969da; --card-bg:#fff;
+  --tool-bg:#fff; --tool-fg:#1f2328;
+  --overlay:rgba(240,243,247,.86); --drop-border:#c4ccd6;
+  --axis-head:#57606a; --cell-empty:rgba(0,0,0,.04);
+  --accent-on:#fff;                    /* 淺色的 accent 是深藍 → 必須用白字（沿用暗字會看不見） */
+  --chip-hover:rgba(0,0,0,.06);
+}
+
+html.dark-mode, html.light-mode {
+  --mz-primary: var(--accent);
+  --mz-focus: var(--accent);
+  --mz-surface: var(--surface);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+  min-height: 100vh;
+}
+main { min-height: 100vh; }
+
+.app-container {
+  width: 92%; max-width: 1280px; margin: 0 auto; padding: 22px 0 72px;
+}
+
+/* ===== 頂部 ===== */
+.topbar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+.topbar h1 { font-size: 1.28rem; font-weight: 500; margin: 0; color: var(--text); }
+.topbar .sub { font-size: .82rem; color: var(--muted); margin-top: 2px; }
+/* 搜尋框走 Materialize 原生下底線（§5.7 表單元素不手刻外框/底色）。
+ * ⚠️ 這裡只能用 #search（1,0,0）——Materialize 的 `input[type="text"]:not(.browser-default)`
+ * 是 (0,2,1)，贏過 `.search-wrap input` (0,1,1)，所以那條選擇器寫什麼都不會生效。
+ * 它是 content-box、height:3rem、padding:0、margin-bottom:.8rem，文字於是浮在 42px 盒子的
+ * 正中央、離底線很遠。壓低內容盒＋補上方內距把文字推向底線（16+26+1 = 43，總高不變），
+ * 並把放大鏡與計數改成靠下對齊，三者才落在同一條線上。 */
+.search-wrap { margin-left: auto; display: flex; align-items: flex-end; gap: 8px; position: relative; }
+.search-wrap .material-icons { color: var(--muted); font-size: 20px; margin-bottom: 5px; }
+#search { height: 26px; padding-top: 16px; margin-bottom: 0; }
+.count { font-size: .8rem; color: var(--muted); white-space: nowrap; margin-bottom: 7px; }
+/* filter-clear（§5.12 共用件）的 × 是 top:50% 對整個框置中；文字既然往下移了，
+ * 它也要跟著下來。共用件不能改，故在 app 這側補 translate（保留它的 -50%）。 */
+.search-wrap .filter-clear { transform: translateY(-50%) translateY(8px); }
+
+/* ===== 色系 chips ===== */
+/* ⚠️ 這是 <nav>，Materialize 的基底 nav 規則（materialize-dark.css 的
+ * `nav, nav .nav-wrapper` → 底色 var(--mz-surface-2) ＋ box-shadow ＋ height/line-height 64px）
+ * 會把它變成一張浮起來的深色卡片＝畫面上看到的那圈外框。這裡逐條解掉，只留分隔線。
+ * 元素仍用 <nav>（帶 aria-label），不為了避開樣式改標籤。 */
+.family-bar {
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  margin: 0 0 16px; padding: 0 0 14px; border-bottom: 1px solid var(--border);
+  background: transparent; box-shadow: none; height: auto; line-height: normal;
+}
+/* 無外框（選中才有底色）；分群靠 .fam-sep 那條豎線，不靠每顆的框 */
+.fam-chip {
+  display: inline-flex; align-items: baseline; gap: 6px; cursor: pointer;
+  background: transparent; border: 0; border-radius: 999px;
+  padding: 6px 11px; font-size: .85rem; color: var(--text); user-select: none;
+  transition: background .12s, color .12s;
+}
+.fam-chip:hover { background: var(--chip-hover); }
+.fam-chip.active, .fam-chip.active:hover { background: var(--accent); color: var(--accent-on); }
+.fam-chip .fam-code { font-weight: 600; letter-spacing: .02em; }
+.fam-chip .fam-n { font-size: .74rem; opacity: .72; }
+/* ⚠️ 同 .cp-cell 那顆坑：materialize-dark.css 有一條 span 的顏色規則（實測 #eee），
+ * 會蓋掉 .fam-chip.active 的字色 → 選中的 chip 變成淺字疊在淺藍 accent 上。
+ * 兩個 span 一律繼承父層。 */
+.fam-chip .fam-code, .fam-chip .fam-n { color: inherit; }
+/* 分群豎線。多了「全部」那顆之後 18 顆 chip ＋ 3 條線在 1280px 視窗差幾 px 就會換行，
+ * 故 chip padding 與本條的左右留白都收窄；再窄的視窗照樣 flex-wrap 換行，無妨。 */
+.fam-sep { width: 1px; align-self: stretch; background: var(--border); margin: 0 3px; }
+
+/* ===== 三軸矩陣 ===== */
+.axis-wrap { overflow-x: auto; }              /* 寬表自己捲，頁面不橫捲 */
+.axis-title { font-size: .92rem; color: var(--muted); margin: 0 0 10px; }
+.axis-title strong { color: var(--text); font-weight: 600; }
+
+.axis-table { border-collapse: separate; border-spacing: 4px; }
+.axis-table th {
+  font-size: .74rem; font-weight: 600; color: var(--axis-head);
+  letter-spacing: .04em; text-align: center; padding: 2px 4px; white-space: nowrap;
+}
+.axis-table th.corner { text-align: right; font-size: .68rem; font-weight: 500; }
+.axis-table th.row-head { text-align: right; padding-right: 8px; }
+.axis-table td { padding: 0; }
+
+.cell-empty { width: 72px; height: 44px; border-radius: 6px; background: var(--cell-empty); }
+
+/* 沒有 bg/iv 兩軸的色系（灰階／無彩／螢光）：同一種色塊排成一列。
+ * gap 對齊 .axis-table 的 border-spacing，看起來就是「同一張表少了兩條軸」。 */
+.cell-row { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.cp-cell {
+  width: 72px; height: 44px; border-radius: 6px; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  border: 1px solid rgba(0,0,0,.10); line-height: 1.15;
+  transition: transform .1s, box-shadow .1s;
+}
+.cp-cell:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,.28); }
+.cp-cell .c-code { font-size: .74rem; font-weight: 700; letter-spacing: .01em; }
+.cp-cell .c-lines { font-size: .58rem; opacity: .8; letter-spacing: .06em; }
+/* ⚠️ 色塊上的字色由 pickTextColor 以對比算出、寫在父元素的 inline style 上。
+ * materialize-dark.css 有一條 span 的顏色規則會把它蓋掉（實測 span 算出 #eee，
+ * 於是淺色格變成白字白底、整格看不見）。這裡強制繼承父層。
+ * FC / CDA 沒踩到是因為它們把文字直接放在元素上，沒有子 span。 */
+.cp-cell .c-code, .cp-cell .c-lines,
+.cp-swatch span, .detail-head span { color: inherit; }
+
+/* ===== 一維色票列（搜尋結果 / 非彩色系） ===== */
+.flat-list {
+  display: grid; gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.cp-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
+  overflow: hidden; cursor: pointer; transition: transform .1s, box-shadow .1s;
+}
+.cp-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,.3); }
+.cp-swatch {
+  height: 62px; display: flex; align-items: flex-end; padding: 6px 8px;
+  font-size: .78rem; font-weight: 700;
+}
+.cp-meta { padding: 7px 9px 9px; }
+.cp-name { font-size: .8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cp-hex { font-size: .74rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.no-result { text-align: center; color: var(--muted); padding: 48px 0; }
+
+/* ===== 產品線徽章 ===== */
+.line-badges { display: flex; gap: 4px; flex-wrap: wrap; }
+.line-badge {
+  font-size: .64rem; padding: 1px 6px; border-radius: 999px;
+  border: 1px solid var(--border); color: var(--muted); letter-spacing: .03em;
+}
+.line-badge.on { border-color: var(--accent); color: var(--accent); }
+
+/* ===== Modal ===== */
+.css-modal .modal-content { background: var(--surface); color: var(--text); }
+.css-modal .modal-footer { background: var(--surface); }
+.css-sub { font-size: .82rem; color: var(--muted); margin-bottom: 10px; }
+.css-modal pre {
+  max-height: 52vh; overflow: auto; background: var(--bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px; font-size: .78rem; line-height: 1.5;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ===== 最接近色側欄（sidenav drawer） =====
+ * 形制沿用 markdown-reader 的檔案清單側欄：右緣、subheader ＋ divider ＋ 清單，
+ * 開啟時 body.sidenav-open 由共用 side-tool.css 把整排側鍵淡出。
+ * ⚠️ Materialize 的 .sidenav 預設貼左緣；edge:'right' 會加 .right-aligned，
+ * 這裡再以 !important 釘一次（同 markdown-reader），避免版本差異讓它跑回左邊。 */
+.sidenav {
+  background: var(--surface) !important;
+  left: auto !important;
+  right: 0 !important;
+  display: flex; flex-direction: column;      /* 表單固定在上、結果清單自己捲 */
+}
+.sidenav .subheader {
+  height: auto !important; min-height: 0 !important; line-height: 1.4 !important;
+  padding: 14px 18px !important; display: flex; align-items: center; gap: 8px;
+  color: var(--muted) !important; font-size: .92rem;
+}
+.sidenav .subheader .material-icons { color: var(--muted) !important; margin: 0; }
+.sidenav .subheader span { color: inherit; }
+.sidenav .divider { background-color: var(--border) !important; }
+/* Materialize 給 .sidenav li 的固定行高會把整塊表單撐開，這裡解掉 */
+.nearest-panel li { line-height: normal; }
+
+.nearest-form { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px 0; }
+/* ⚠️ 原生 color input 的色塊是 shadow DOM（Chrome 的 ::-webkit-color-swatch、
+ * Firefox 的 ::-moz-color-swatch），**外框的 border-radius 圓不到它**——不處理的話
+ * 就是「方形色塊裝在圓角外框裡」，圓角看起來髒。故 wrapper 內距歸零、色塊自己也給圓角
+ * （比外框小 1px＝邊框寬度），色塊才真的是圓角的。 */
+.nearest-form input[type="color"] {
+  width: 64px; height: 48px; padding: 0; border: 1px solid var(--border); border-radius: 11px;
+  background: none; cursor: pointer; flex: 0 0 auto; overflow: hidden;
+}
+.nearest-form input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.nearest-form input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 10px; }
+.nearest-form input[type="color"]::-moz-color-swatch { border: 0; border-radius: 10px; }
+.nearest-form input[type="text"] {
+  flex: 1 1 0; min-width: 0; width: auto;
+  /* ⚠️ flex-basis 必須是 0 不是 auto：換行是**先分行再收縮**——auto 讓輸入框以
+   * 「內容寬」（原生 input 預設 size=20，約 200px）參與分行計算，
+   * 64 ＋ 200 ＋ 48 ＋ gap 就超過側欄可用的 324px，貼上鈕於是被擠到第二行。
+   * basis 0 讓它不佔分行預算、只吃剩餘空間，三個元素才留在同一行。 */
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px;
+  color: var(--text); padding: 7px 12px; height: 48px; margin: 0; box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9rem;
+}
+/* 剪貼簿貼上鈕。焦點環用 :focus-visible（鍵盤操作要看得見焦點，滑鼠點擊不出現）。 */
+.nearest-paste {
+  flex: 0 0 auto; width: 48px; height: 48px; padding: 0; font: inherit;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface-2); color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: color .12s, border-color .12s;
+}
+.nearest-paste:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nearest-paste:hover { color: var(--accent); border-color: var(--accent); }
+.nearest-paste .material-icons { font-size: 20px; color: inherit; }
+
+.nearest-form select {
+  flex: 1 0 100%; width: 100%;
+  background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); padding: 7px 10px; font-size: .82rem; height: 36px;
+}
+.nearest-hint { font-size: .74rem; color: var(--muted); padding: 10px 18px 12px; line-height: 1.45; }
+
+/* 結果清單：側欄是窄長條，故改成一列一色（原本 Modal 內是網格）。
+ * 這塊自己捲，表單與提示留在上方不動。 */
+.nearest-result { flex: 1 1 auto; overflow-y: auto; padding: 8px 12px 24px; }
+.near-item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 6px; margin-bottom: 6px; border: 1px solid var(--border); border-radius: 10px;
+  background: transparent; cursor: pointer; text-align: left;
+  transition: background .12s, border-color .12s;
+}
+.near-item:hover { background: var(--chip-hover); }
+.near-item.active { border-color: var(--accent); background: var(--chip-hover); }
+.near-sw {
+  flex: 0 0 auto; width: 62px; height: 42px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .74rem; font-weight: 700; border: 1px solid rgba(0,0,0,.10);
+}
+.near-meta { min-width: 0; flex: 1 1 auto; }
+.near-name {
+  display: block; font-size: .82rem; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.near-sub { display: flex; gap: 8px; align-items: center; font-size: .72rem; color: var(--muted); margin-top: 3px; }
+.near-hex { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+/* ΔE 分級標示：形制與色值同 caran-dache-color 的 .nr-de（pill ＋ 同一組 band 色）。
+ * 三支比對器用的是同一把尺（ΔE00）與同一組級距，級距的**讀法**也該長一樣。
+ * band-far 刻意不上色——「差異大」不是推薦，不該被裝飾成一個結論。 */
+.near-de {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 2px 8px; border-radius: 12px; border: 1px solid var(--border);
+  color: var(--muted); white-space: nowrap; flex: 0 0 auto;
+}
+.near-de.band-very { color: #37b26b; border-color: #37b26b; }
+.near-de.band-close { color: #26a69a; border-color: #26a69a; }
+.near-de.band-noticeable { color: #f0ad4e; border-color: #f0ad4e; }
+
+@media (max-width: 720px) {
+  .search-wrap { margin-left: 0; width: 100%; }
+  .search-wrap input { width: 100%; }
+  .cell-empty, .cp-cell { width: 60px; height: 40px; }
+}
+
+/* ===== 色票明細 Modal（colour-detail.js 注入的 markup） =====
+ * 形制與 faber-castell-color／caran-dache-color 的明細逐條對齊：同一組 class、同一份數值
+ * （色帶頭 → 色名／註記 → 複製鈕列 → 若干 .d-section）。三支色彩 registry 打開明細
+ * 看到的是同一張卡，只有段落內容不同。改這一段前先確認另兩支要不要一起動。 */
+.detail-modal { border-radius: 14px; max-width: 560px; }
+.detail-modal .modal-content { padding: 0; background: var(--surface); color: var(--text); }
+.detail-modal .modal-footer { background: var(--surface); }
+.detail-head {
+  height: 120px; display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 14px 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.detail-head .d-code { font-size: 1.3rem; font-weight: 600; }
+.detail-head .d-tag { font-size: .82rem; opacity: .92; text-align: right; }
+.detail-body { padding: 16px 20px 6px; }
+.detail-body .d-name { font-size: 1.05rem; font-weight: 500; color: var(--text); }
+.detail-body .d-name-loc { font-size: .86rem; color: var(--muted); margin-top: 1px; }
+.detail-body .d-note { font-size: .74rem; color: var(--muted); margin: 6px 0 12px; }
+
+/* 複製鈕列 */
+.copy-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.copy-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border); border-radius: 9px;
+  background: var(--surface); color: var(--text);
+  padding: 7px 11px; font-size: .82rem; cursor: pointer;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.copy-btn:hover { border-color: var(--accent); }
+.copy-btn.copied { border-color: #37b26b; color: #37b26b; }
+.copy-btn .material-icons { font-size: 16px; }
+
+/* 明細裡的區塊（色號分解 / 產品線 / 套組） */
+.d-section { margin: 12px 0; }
+.d-section h6 { font-size: .82rem; color: var(--muted); font-weight: 500; margin: 0 0 8px; text-transform: none; }
+.facts-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.facts-table td { padding: 5px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.facts-table td.fk { color: var(--muted); white-space: nowrap; width: 34%; }
+.facts-table td.fv { color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.set-line { font-size: .82rem; margin: 3px 0; color: var(--text); }
+.set-line .line-name { color: var(--muted); }
+.set-line .set-link {
+  background: none; border: 0; padding: 0 1px; cursor: pointer;
+  font: inherit; color: var(--accent); text-decoration: underline;
+  text-decoration-color: var(--border); text-underline-offset: 2px;
+}
+.set-line .set-link:hover { text-decoration-color: var(--accent); }
+.d-empty { font-size: .8rem; color: var(--muted); }
+
+/* ── 產品線篩選 chips（多選）─────────────────────────────────────────────
+   與上方的色系 chips（分組、單選）**視覺必須可區辨**：唯一的信號是勾號，
+   這也是 Material 對 filter chip 的原生慣例（DESIGN_GUIDELINES §5.13）。
+   位置在篩選輸入框之下、分組 chips 之下——同屬「縮小範圍」那一層。 */
+.line-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 0 0 14px; padding: 0;
+}
+.type-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 11px; border-radius: 999px; cursor: pointer;
+  font-size: .78rem; font-weight: 600; letter-spacing: .02em;
+  color: var(--muted); background: var(--surface-2);
+  border: 1px solid var(--border);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.type-chip:hover, .type-chip:focus, .type-chip:active {
+  background: var(--surface); color: var(--text); border-color: var(--accent);
+}
+.type-chip.active {
+  background: var(--accent); border-color: var(--accent);
+  color: #0f1115; padding-left: 7px;
+}
+[data-theme="light"] .type-chip.active { color: #fff; }
+.type-chip.active::before {
+  content: 'check';
+  font-family: 'Material Icons';
+  font-size: 13px; line-height: 1; margin-right: 3px;
+  font-weight: normal; letter-spacing: normal;
+}
+.type-chip .fam-n { opacity: .72; font-weight: 500; }

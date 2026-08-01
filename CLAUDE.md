@@ -1,0 +1,68 @@
+# finecolour-color — Session 起手 context
+
+> 版本 v1.0｜最後更新 2026-08-01
+
+Finecolour（法卡勒）色號 → CSS 對照。家族**第四支色彩 registry**、第三支雙頁 app。
+零後端資料庫、public repo、`clone` 下來 `npm start` 就能跑。
+
+## 動手前必讀
+
+- 家族規範：<https://github.com/scottgfhong310/nodeapp-webapp-family/blob/main/DESIGN_GUIDELINES.md>
+  ——特別是 **§11.1**（色票明細卡形制，四支色彩 app 共用）、**§5.13**（分組 chips vs 篩選 chips）、
+  **§6.2**（資料的多語名稱怎麼顯示）。
+- 本 repo 的 [`DESIGN.md`](DESIGN.md)——**為什麼長這樣**。動任何與色名、色號空間、
+  產品線有關的東西之前先讀 §1.2。
+
+## 結構
+
+```
+app.js                                   Express（morgan + static + 302 + JSON 404 + PORT||3000）
+public/apps/finecolour-color/
+  index.html                             純結構（含防閃爍開機腳本）
+  finecolour-color.css / .js             樣式 / 控制器（碰 DOM）
+  finecolour-color-lib.js                核心，不碰 DOM，IIFE → window.FinecolourColorLib
+  sets.html / sets.css / sets.js         套組收錄對照（第二頁）
+  colour-detail.js                       明細卡（兩頁共用；markup 由模組自己注入）
+  nearest-panel.js                       最接近色面板（兩頁共用）
+  i18n.js + locales/{zh-Hant,en,ja}.js    預設 zh-Hant
+  data/finecolour-colors.js / -sets.js   **生成物，不手改**
+```
+
+## 三條不可違反的
+
+1. **`data/*.js` 是生成物。** 由 `My Projects/Art Colour/export/a3-export.js` 自
+   `db_artcolor` 匯出。要改資料就去改 DB 再跑 `--write`，然後 `--check` 確認逐位元組相同。
+   **手改產物＝下次匯出被蓋掉，而且庫與 repo 從此不一致。**
+
+2. **主名一律走 `L.officialName(color)`，不可直接讀 `.name`。**
+   官方名不一定是英文——麥克筆 480 色的色譜是英文的、彩針筆 48 色的是中文的，
+   靠資料的 `official` 欄（`'en'`／`'zh'`）決定。直接讀 `.name` 會讓彩針筆顯示成
+   我們這邊的譯名，**拿去問賣家對不到任何東西**。譯名走 `L.localName(color, lang)`。
+
+3. **兩類 chips 的視覺不可混用**（§5.13）：色系是**分組**（單選、無勾號、自備「全部」那顆），
+   產品線是**篩選**（多選、帶勾號、可全部取消）。搜尋時分組 bar 要收起。
+
+## 複製件（共用件改版時要回來同步）
+
+| 檔案 | 權威版 |
+| --- | --- |
+| `materialize-dark.css` | 家族 repo 根 |
+| `side-tool.css` / `side-tool.js` | 家族 repo 根 |
+| `filter-clear.css` / `filter-clear.js` | 以 `local-reader` 那份為準 |
+| `i18n.js` | 家族 repo 根 |
+
+`colour-detail.js`／`nearest-panel.js` 是**本 repo 內**的跨頁共用模組（不是家族共用件），
+形制與另外三支色彩 app 一致但各自維護。
+
+## 驗證（不靠肉眼猜）
+
+```bash
+npm start   # → http://localhost:3000/apps/finecolour-color/
+```
+
+- `/` 302 → `/apps/finecolour-color/`；資產 200；API 404 回 JSON
+- 色系 chips 25 顆（全部 ＋ 23 色系 ＋ 彩針筆）、產品線 chips 5 顆且帶勾號
+- 明細卡：marker 主名英文＋中文輔助行；**fineliner 主名中文、輔助行隱藏**
+- `sets.html` 43 組、227 列；系列列顯示「系列」而非「子系列」
+- 三語切換、light/dark 切換、`nearestFinecolour` 預設只比 marker
+- 原始碼不得含 NUL 位元組（家族稽核，見 SHARED_LIBRARY_GUIDELINES §6）
