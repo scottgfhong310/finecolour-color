@@ -57,9 +57,9 @@
   function visibleSets() {
     return line ? SETS.filter(function (s) { return s.line === line; }) : SETS.slice();
   }
-  function setByCode(code) {
-    return SETS.filter(function (s) { return s.code === code; })[0] || null;
-  }
+  // 一律以 key 識別（見 lib 的 setKey）——`code` 只在產品線內唯一。
+  function K(s) { return L.setKey(s); }
+  function setByCode(id) { return L.findSet(SETS, id); }
 
   // ---- 固定 Header --------------------------------------------------------
 
@@ -128,7 +128,7 @@
     }).join('');
     // 第 4 列：尺寸（點它＝選為基準組）
     var h4 = cols.map(function (s, ci) {
-      return '<th class="c-size' + (s.code === pick ? ' is-picked' : '') + '" data-col="' + ci + '"' +
+      return '<th class="c-size' + (K(s) === pick ? ' is-picked' : '') + '" data-col="' + ci + '"' +
         ' title="' + esc(s.name + (s.complete ? '' : ' ＊')) + '">' + s.size + '</th>';
     }).join('');
     // 第 5 列：相對基準組還缺幾色（只有選了基準組才出現）
@@ -136,12 +136,12 @@
     if (gaps) {
       h5 = '<tr class="r-gap">' + rowspanLabel('sets.gapRow', '相對基準組還缺幾色') +
         cols.map(function (s) {
-          var g = gaps[s.code];
-          var cls = s.code === pick ? ' is-picked' : (g === 0 ? ' is-full' : '');
-          return '<td class="c-gap' + cls + '" title="' + esc(s.code === pick
+          var g = gaps[K(s)];
+          var cls = K(s) === pick ? ' is-picked' : (g === 0 ? ' is-full' : '');
+          return '<td class="c-gap' + cls + '" title="' + esc(K(s) === pick
             ? t('sets.gapSelf', '基準組本身')
             : t('sets.gapTip', '相對基準組，這一欄還缺 {n} 色', { n: g }).replace('{n}', g)) + '">' +
-            (s.code === pick ? '—' : (g === 0 ? '0' : '−' + g)) + '</td>';
+            (K(s) === pick ? '—' : (g === 0 ? '0' : '−' + g)) + '</td>';
         }).join('') + '</tr>';
     }
     return '<thead>' +
@@ -163,8 +163,8 @@
       var hidden = pick && !r.cells[pick];
       var fg = c ? L.pickTextColor(c) : 'inherit';
       var cells = cols.map(function (s) {
-        var on = r.cells[s.code];
-        return '<td class="cell' + (on ? ' is-in' : '') + (s.code === pick ? ' is-pickedcell' : '') + '">' +
+        var on = r.cells[K(s)];
+        return '<td class="cell' + (on ? ' is-in' : '') + (K(s) === pick ? ' is-pickedcell' : '') + '">' +
           (on ? '<span class="dot"></span>' : '') + '</td>';
       }).join('');
       return '<tr data-code="' + esc(r.code) + '"' + (hidden ? ' class="is-hidden"' : '') + '>' +
@@ -191,7 +191,7 @@
 
   function render() {
     var cols = visibleSets();
-    if (pick && !cols.some(function (s) { return s.code === pick; })) pick = null;  // 切線後基準組不在表上
+    if (pick && !cols.some(function (s) { return K(s) === pick; })) pick = null;  // 切線後基準組不在表上
 
     var codes = rowCodes(cols);
     var rows = L.assortmentMatrix(SETS, pick, { codes: codes });
@@ -233,7 +233,7 @@
       // 差異行為交給呼叫端：這一頁不跳走，就地換基準組（切換與捲動位置都保住）
       onSetClick: function (s) {
         if (line && s.line !== line) setLine(s.line);   // 跨產品線時先切過去
-        setPick(s.code);
+        setPick(K(s));
         M.Modal.getInstance(document.getElementById('cp-detail-modal')).close();
       }
     });
@@ -292,7 +292,8 @@
     var wantLine = q.get('line');
     if (!wantSet) { try { wantSet = localStorage.getItem(LS_PICK); } catch (e) { } }
     if (!wantLine) { try { wantLine = localStorage.getItem(LS_LINE); } catch (e) { } }
-    if (wantSet && setByCode(wantSet)) pick = wantSet;
+    var found = wantSet && setByCode(wantSet);
+    if (found) pick = K(found);   // 深連結可給 key 或（唯一的）code，一律正規化成 key
     if (wantLine && LINES.some(function (l) { return l.id === wantLine; })) line = wantLine;
 
     initTools();
@@ -310,7 +311,7 @@
       var th = e.target.closest('.c-size');
       if (th) {                                   // 點尺寸＝選為基準組（再點一次取消）
         var s = visibleSets()[+th.dataset.col];
-        if (s) setPick(s.code === pick ? '' : s.code);
+        if (s) setPick(K(s) === pick ? '' : K(s));
         return;
       }
       var tr = e.target.closest('tbody tr');

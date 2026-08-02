@@ -184,7 +184,7 @@
     window.FinecolourDetail.open(c, {
       sets: SETS,
       lines: LINES,
-      onSetClick: function (s) { window.open('./sets.html?set=' + encodeURIComponent(s.code), '_blank'); }
+      onSetClick: function (s) { window.open('./sets.html?set=' + encodeURIComponent(L.setKey(s)), '_blank'); }
     });
   }
 
