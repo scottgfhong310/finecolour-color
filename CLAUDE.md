@@ -1,6 +1,6 @@
 # finecolour-color — Session 起手 context
 
-> 版本 v1.0｜最後更新 2026-08-01
+> 版本 v1.1｜最後更新 2026-08-02
 
 Finecolour（法卡勒）色號 → CSS 對照。家族**第四支色彩 registry**、第三支雙頁 app。
 零後端資料庫、public repo、`clone` 下來 `npm start` 就能跑。
@@ -42,6 +42,11 @@ public/apps/finecolour-color/
 3. **兩類 chips 的視覺不可混用**（§5.13）：色系是**分組**（單選、無勾號、自備「全部」那顆），
    產品線是**篩選**（多選、帶勾號、可全部取消）。搜尋時分組 bar 要收起。
 
+4. **套組的識別是 `key` 不是 `code`。** `code` 只在**產品線內**唯一——四條產品線
+   各有一組 `standard-120`。拿 `code` 當識別會把它們當成同一組（症狀：選一個，
+   四欄同時亮起）。一律走 `L.setKey(s)`／`L.findSet(sets, id)`；`?set=` 深連結
+   給 key，舊的 code 只在全域唯一時才認，撞號時當作沒選。
+
 ## 複製件（共用件改版時要回來同步）
 
 | 檔案 | 權威版 |
@@ -63,6 +68,7 @@ npm start   # → http://localhost:3000/apps/finecolour-color/
 - `/` 302 → `/apps/finecolour-color/`；資產 200；API 404 回 JSON
 - 色系 chips 25 顆（全部 ＋ 23 色系 ＋ 彩針筆）、產品線 chips 5 顆且帶勾號
 - 明細卡：marker 主名英文＋中文輔助行；**fineliner 主名中文、輔助行隱藏**
-- `sets.html` 43 組、227 列；系列列顯示「系列」而非「子系列」
+- `sets.html` 51 組、314 列；系列列顯示「系列」而非「子系列」
+- **選一個套組後只有 1 欄被標成選中**（見下面第 4 條）
 - 三語切換、light/dark 切換、`nearestFinecolour` 預設只比 marker
 - 原始碼不得含 NUL 位元組（家族稽核，見 SHARED_LIBRARY_GUIDELINES §6）
