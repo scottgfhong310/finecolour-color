@@ -356,3 +356,12 @@ main { min-height: 100vh; }
   font-weight: normal; letter-spacing: normal;
 }
 .type-chip .fam-n { opacity: .72; font-weight: 500; }
+
+/* 子分群列（只在壓克力筆那群出現）。**這一列是我們算的、不是原廠分類**，
+   所以視覺上要與上面那列的官方色系可分：整列降一級、前置一句說明。 */
+.family-bar.is-derived { opacity: .92; }
+.family-bar.is-derived .hue-hint {
+  font-size: .74rem; color: var(--muted); align-self: center;
+  margin-right: 2px; white-space: nowrap;
+}
+.family-bar.is-derived .fam-chip { font-size: .78rem; }

@@ -28,6 +28,7 @@
   var KEY_THEME = 'finecolour-color-theme';
   var KEY_GROUP = 'finecolour-color-group';
   var KEY_LINES = 'finecolour-color-lines';
+  var KEY_HUE = 'finecolour-color-hue';
 
   // 分組 chips 末尾的兩群：它們是**另外兩個色號空間**，不是麥克筆的某個色系。
   var FINELINER = 'fineliner';
@@ -39,11 +40,13 @@
 
   var state = {
     group: localStorage.getItem(KEY_GROUP) || 'all',   // 'all' | 色系 code | 'fineliner' | 'acrylic'
+    hue: localStorage.getItem(KEY_HUE) || 'all',       // 只在 group === 'acrylic' 時有作用
     lines: (localStorage.getItem(KEY_LINES) || '').split(',').filter(Boolean),
     q: ''
   };
 
   var $fams = document.getElementById('families');
+  var $hue = document.getElementById('hue-bar');
   var $lines = document.getElementById('lines');
   var $grid = document.getElementById('grid');
   var $none = document.getElementById('no-result');
@@ -61,8 +64,14 @@
   /** 目前分組選中的那批（不含產品線篩選與搜尋）。 */
   function grouped() {
     if (state.group === 'all') return COLORS;
-    if (state.group === FINELINER || state.group === ACRYLIC) {
-      return COLORS.filter(function (c) { return c.space === state.group; });
+    if (state.group === ACRYLIC) {
+      return COLORS.filter(function (c) {
+        return c.space === ACRYLIC
+          && (state.hue === 'all' || L.hueGroupOf(c) === state.hue);
+      });
+    }
+    if (state.group === FINELINER) {
+      return COLORS.filter(function (c) { return c.space === FINELINER; });
     }
     return COLORS.filter(function (c) { return c.space === 'marker' && c.family === state.group; });
   }
@@ -100,7 +109,37 @@
   function pickGroup(g) {
     state.group = g;
     localStorage.setItem(KEY_GROUP, g);
+    // 離開壓克力筆就把子分群歸零——留著它，下次回來會看到一個自己沒選過的篩選
+    if (g !== ACRYLIC) pickHue('all', true);
     render();
+  }
+
+  function pickHue(h, silent) {
+    state.hue = h;
+    localStorage.setItem(KEY_HUE, h);
+    if (!silent) render();
+  }
+
+  /** 子分群列：只在壓克力筆那群出現。**這一列是算出來的，不是原廠分類。** */
+  function renderHues() {
+    var on = state.group === ACRYLIC && !state.q;
+    $hue.hidden = !on;
+    if (!on) return;
+    $hue.innerHTML = '';
+    var hint = document.createElement('span');
+    hint.className = 'hue-hint';
+    hint.textContent = t('hue.hint', '色相（依色票計算，非原廠分類）');
+    $hue.appendChild(hint);
+    var pool = COLORS.filter(function (c) { return c.space === ACRYLIC; });
+    $hue.appendChild(chipNode('fam-chip', t('hue.all', '全部'), t('hue.all', '全部'),
+      pool.length, state.hue === 'all', function () { pickHue('all'); }));
+    L.hueGroupKeys().forEach(function (k) {
+      var n = pool.filter(function (c) { return L.hueGroupOf(c) === k; }).length;
+      if (!n) return;
+      var label = t('hue.' + k, k);
+      $hue.appendChild(chipNode('fam-chip', label, label, n,
+        state.hue === k, function () { pickHue(k); }));
+    });
   }
 
   function renderFamilies() {
@@ -182,6 +221,7 @@
     // （DESIGN_GUIDELINES §5.13 ②）。「全部」不受此限——它自己是 bar 裡的 chip。
     $fams.style.display = state.q ? 'none' : '';
     if (!state.q) renderFamilies();
+    renderHues();
     renderLines();
 
     var list = visible();

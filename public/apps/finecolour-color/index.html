@@ -58,8 +58,14 @@
         </div>
       </div>
 
-      <!-- 分組 chips（單選）：全部 → 23 個官方色系 → 彩針筆（另一個色號空間） -->
+      <!-- 分組 chips（單選）：全部 → 23 個官方色系 → 彩針筆／壓克力筆（另兩個色號空間） -->
       <div id="families" class="family-bar group-chips" role="group" aria-label="Colour family"></div>
+
+      <!-- 子分群（單選）：只在壓克力筆那群出現。
+           ⚠️ 這一列是**我們算的**，不是原廠分類——EF600 原廠不發佈色系。
+           故獨立一列並帶前置說明，不可與上面那列的官方色系混在一起。 -->
+      <div id="hue-bar" class="family-bar group-chips is-derived" role="group"
+           aria-label="Hue (computed)" hidden></div>
 
       <!-- 篩選 chips（多選、帶勾號）：哪幾代產品線有出這支色 -->
       <div id="lines" class="line-bar" role="group" aria-label="Product line"></div>
