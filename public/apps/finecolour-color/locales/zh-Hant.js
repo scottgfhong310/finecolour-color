@@ -2,7 +2,7 @@
 I18n.register('zh-Hant', {
   'title.page': 'Finecolour 色號 → CSS',
   'app.title': 'Finecolour 色號 → CSS',
-  'app.sub': '依色系與產品線瀏覽 528 色；色票取自製造商官方宣傳單，為螢幕近似值',
+  'app.sub': '依色系與產品線瀏覽 648 色；色票取自官方色譜／套組圖，為螢幕近似值',
 
   'search.placeholder': '色號或色名…',
   'search.empty': '找不到符合的顏色',
@@ -32,6 +32,9 @@ I18n.register('zh-Hant', {
   'band.far': '差異大',
 
   'group.fineliner': '彩針筆',
+  'group.acrylic': '壓克力筆',
+  'note.noName': '原廠不發佈色名',
+  'note.approxAcrylic': 'hex 取自經銷商商品頁的官方套組圖、為螢幕近似值；該系列屬法卡勒（上海），製造商官網未提供色譜',
   'detail.space': '色號空間',
   'detail.num': '號碼',
   'detail.noFamily': '彩針筆不屬於麥克筆的色系分群，且官方只發佈中文色名',

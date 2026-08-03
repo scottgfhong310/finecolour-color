@@ -124,19 +124,28 @@
     document.getElementById('d-code').textContent = color.code;
 
     var fam = (global.FINECOLOUR_FAMILIES || []).filter(function (f) { return f.code === color.family; })[0];
-    document.getElementById('d-tag').textContent =
-      fam ? fam.code + ' ' + fam.name : t('group.fineliner', '彩針筆');
+    document.getElementById('d-tag').textContent = fam ? fam.code + ' ' + fam.name
+      : color.space === 'acrylic' ? t('group.acrylic', '壓克力筆')
+      : t('group.fineliner', '彩針筆');
     // 主名恆為**官方名**——它是跟賣家溝通、可查證的識別憑據。哪個語言是官方的
     // 因色號空間而異（marker 的色譜是英文、fineliner 的是中文），故一律走 lib 的
     // officialName()，不可直接讀 .name：那會讓 fineliner 顯示成譯名。
-    document.getElementById('d-name').textContent = L.officialName(color);
+    // ⚠️ **壓克力筆（EF600）原廠根本不發佈色名**——主名位置改放色號，
+    // 並在輔助行**明講「原廠不發佈色名」**：留白會被讀成「我們沒抽到」，那是錯的答案。
+    var named = L.hasOfficialName(color);
+    document.getElementById('d-name').textContent =
+      named ? L.officialName(color) : color.code;
     // 譯名只作輔助行；語言就是官方語言時不重複顯示，沒有譯名時整行隱藏
     // ——缺席是狀態不是錯誤。形制同 caran-dache-color。
-    var loc = L.localName(color, (global.I18n && global.I18n.lang) || 'zh-Hant');
+    var loc = named ? L.localName(color, (global.I18n && global.I18n.lang) || 'zh-Hant')
+      : t('note.noName', '原廠不發佈色名');
     var locEl = document.getElementById('d-name-loc');
     locEl.textContent = loc; locEl.style.display = loc ? '' : 'none';
-    document.getElementById('d-note').textContent =
-      t('note.approx', 'hex 取自製造商官方宣傳單、為螢幕近似值；圖上自述印刷色僅供參考，請以實際畫線為準');
+    locEl.classList.toggle('is-nonames', !named);
+    document.getElementById('d-note').textContent = color.space === 'acrylic'
+      ? t('note.approxAcrylic',
+          'hex 取自經銷商商品頁的官方套組圖、為螢幕近似值；該系列屬法卡勒（上海），製造商官網未提供色譜')
+      : t('note.approx', 'hex 取自製造商官方宣傳單、為螢幕近似值；圖上自述印刷色僅供參考，請以實際畫線為準');
 
     var cp = document.getElementById('d-copy');
     cp.innerHTML = '';

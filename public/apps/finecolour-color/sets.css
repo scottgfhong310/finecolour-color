@@ -181,3 +181,7 @@
   .line-tab { padding: 5px 10px; }
   .assort { --w-color: 168px; }
 }
+
+/* 原廠不發佈色名（EF600 壓克力筆）：色名欄不留白——留白會被讀成「沒抽到」。
+   密集表格裡不重複寫 120 次說明，只放一個減號，全文在 title。 */
+.cname.is-noname { color: var(--muted); opacity: .55; }

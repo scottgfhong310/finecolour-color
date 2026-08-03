@@ -2,7 +2,7 @@
 I18n.register('ja', {
   'title.page': 'Finecolour カラーコード → CSS',
   'app.title': 'Finecolour 色番号 → CSS',
-  'app.sub': '色系とプロダクトラインで 528 色を閲覧。色見本は公式リーフレットからの採取で画面上の近似値です',
+  'app.sub': '色系とプロダクトラインで 648 色を閲覧。色見本は公式色見本・セット図からの採取で画面上の近似値です',
 
   'search.placeholder': '色番号または色名…',
   'search.empty': '該当する色がありません',
@@ -32,6 +32,9 @@ I18n.register('ja', {
   'band.far': '遠い',
 
   'group.fineliner': 'ファインライナー',
+  'group.acrylic': 'アクリル',
+  'note.noName': 'メーカーは色名を公開していません',
+  'note.approxAcrylic': 'hex は販売店の商品ページに掲載された公式セット図から採取した画面上の近似値です。本シリーズは法卡勒（上海）製で、メーカー公式サイトに色見本はありません。',
   'detail.space': '番号体系',
   'detail.num': '番号',
   'detail.noFamily': 'ファインライナーはマーカーの色系分類外で、公式の色名は中国語のみです',

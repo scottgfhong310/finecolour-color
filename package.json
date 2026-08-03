@@ -1,7 +1,7 @@
 {
   "name": "finecolour-color",
   "version": "1.0.0",
-  "description": "Finecolour marker & fineliner colour codes → CSS variables: 528 colours by family and product line, with 43 assortments",
+  "description": "Finecolour marker, fineliner & acrylic colour codes → CSS variables: 648 colours by family and product line, with 63 assortments",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

@@ -2,18 +2,18 @@
 
 > [English](README.md) ｜ [繁體中文](README.zh-Hant.md) ｜ [日本語](README.ja.md)
 
-Finecolour（法卡勒）麥克筆與彩針筆的色號 → CSS 變數對照。**528 色**可依色系與產品線瀏覽，
-另有 **43 組套裝的收錄對照表**。
+Finecolour（法卡勒）麥克筆、彩針筆與壓克力筆的色號 → CSS 變數對照。**648 色**可依色系與產品線瀏覽，
+另有 **63 組套裝的收錄對照表**。
 
 不相容 GitHub Pages：前端以絕對路徑取資產，需由本專案的 Node 伺服器供應。
 
 ## 功能
 
-- **528 色、兩個色號空間**：麥克筆 480 色（色系字首＋號碼，如 `BV321`；號碼 0–479 品牌內唯一）
-  與彩針筆 48 色（`02`、`03`，獨立編號）。
+- **648 色、三個色號空間**：麥克筆 480 色（色系字首＋號碼，如 `BV321`；號碼 0–479 品牌內唯一）
+  、彩針筆 48 色（`02`、`03`，獨立編號）與壓克力筆 120 色（`500`–`619`，**原廠不發佈色名**）。
 - **產品線可得性**：EF100／EF101／EF102／EF103／EF300 哪幾代實際有出這支色——可篩選，
   明細卡也逐條列出。
-- **43 組套裝**，含八條專業套裝線（景觀園林／室內設計／建築城規／環藝設計／服裝設計／
+- **63 組套裝**，含八條專業套裝線（景觀園林／室內設計／建築城規／環藝設計／服裝設計／
   動漫設計／工業設計／考研快題）與膚色套裝。
 - **官方名恆為主名——而官方名不一定是英文**：麥克筆色譜是英文的、彩針筆色譜是中文的。
   每支色帶 `official` 欄，app 先顯示可查證的那個名字，譯名只作輔助行。
@@ -38,8 +38,8 @@ public/apps/finecolour-color/
   finecolour-color-lib.js                核心 library，不碰 DOM（window.FinecolourColorLib）
   sets.html · sets.css · sets.js         套組收錄對照
   colour-detail.js · nearest-panel.js    兩頁共用
-  data/finecolour-colors.js              528 色 ＋ 23 色系 ＋ meta
-  data/finecolour-sets.js                43 組套裝
+  data/finecolour-colors.js              648 色 ＋ 23 色系 ＋ meta
+  data/finecolour-sets.js                63 組套裝
 ```
 
 ## 資料

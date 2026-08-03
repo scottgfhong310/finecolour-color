@@ -145,6 +145,9 @@ main { min-height: 100vh; }
 }
 .cp-meta { padding: 7px 9px 9px; }
 .cp-name { font-size: .8rem; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 原廠不發佈色名（EF600）：文字放在色名的位置但降一級——它是**說明**不是名字。
+   留白會被讀成「我們沒抽到」，所以寧可明講。 */
+.cp-name.is-noname { color: var(--muted); font-style: italic; }
 .cp-hex { font-size: .74rem; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 .no-result { text-align: center; color: var(--muted); padding: 48px 0; }
@@ -288,6 +291,7 @@ main { min-height: 100vh; }
 .detail-body { padding: 16px 20px 6px; }
 .detail-body .d-name { font-size: 1.05rem; font-weight: 500; color: var(--text); }
 .detail-body .d-name-loc { font-size: .86rem; color: var(--muted); margin-top: 1px; }
+.detail-body .d-name-loc.is-nonames { font-style: italic; }
 .detail-body .d-note { font-size: .74rem; color: var(--muted); margin: 6px 0 12px; }
 
 /* 複製鈕列 */

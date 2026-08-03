@@ -29,10 +29,16 @@
   var KEY_GROUP = 'finecolour-color-group';
   var KEY_LINES = 'finecolour-color-lines';
 
-  var FINELINER = 'fineliner';           // 分組 chips 裡代表「彩針筆」那一群的值
+  // 分組 chips 末尾的兩群：它們是**另外兩個色號空間**，不是麥克筆的某個色系。
+  var FINELINER = 'fineliner';
+  var ACRYLIC = 'acrylic';
+  var SPACE_GROUPS = [
+    { space: FINELINER, key: 'group.fineliner', fb: '彩針筆' },
+    { space: ACRYLIC, key: 'group.acrylic', fb: '壓克力筆' }
+  ];
 
   var state = {
-    group: localStorage.getItem(KEY_GROUP) || 'all',   // 'all' | 色系 code | 'fineliner'
+    group: localStorage.getItem(KEY_GROUP) || 'all',   // 'all' | 色系 code | 'fineliner' | 'acrylic'
     lines: (localStorage.getItem(KEY_LINES) || '').split(',').filter(Boolean),
     q: ''
   };
@@ -55,7 +61,9 @@
   /** 目前分組選中的那批（不含產品線篩選與搜尋）。 */
   function grouped() {
     if (state.group === 'all') return COLORS;
-    if (state.group === FINELINER) return COLORS.filter(function (c) { return c.space === FINELINER; });
+    if (state.group === FINELINER || state.group === ACRYLIC) {
+      return COLORS.filter(function (c) { return c.space === state.group; });
+    }
     return COLORS.filter(function (c) { return c.space === 'marker' && c.family === state.group; });
   }
 
@@ -110,14 +118,16 @@
         state.group === f.code, function () { pickGroup(f.code); }));
     });
 
-    // 彩針筆自成一群——它是另一個色號空間，不是麥克筆的某個色系
-    var nf = COLORS.filter(function (c) { return c.space === FINELINER; }).length;
-    if (nf) {
-      $fams.appendChild(sepNode());
-      $fams.appendChild(chipNode('fam-chip', t('group.fineliner', '彩針筆'),
-        t('group.fineliner', '彩針筆'), nf,
-        state.group === FINELINER, function () { pickGroup(FINELINER); }));
-    }
+    // 另外兩個色號空間各自成一群（彩針筆／壓克力筆），排在色系之後。
+    var first = true;
+    SPACE_GROUPS.forEach(function (g) {
+      var n = COLORS.filter(function (c) { return c.space === g.space; }).length;
+      if (!n) return;
+      if (first) { $fams.appendChild(sepNode()); first = false; }
+      var label = t(g.key, g.fb);
+      $fams.appendChild(chipNode('fam-chip', label, label, n,
+        state.group === g.space, function () { pickGroup(g.space); }));
+    });
   }
 
   function renderLines() {
@@ -145,9 +155,6 @@
 
   // ---- 色票 ---------------------------------------------------------------
 
-  /** 官方名恆為主名；哪個語言是官方的由資料的 `official` 決定（見 data 檔頭）。 */
-  function officialName(c) { return c.official === 'zh' ? (c.nameZh || '') : (c.name || ''); }
-
   function cardNode(c) {
     var el = document.createElement('div');
     el.className = 'cp-card';
@@ -158,9 +165,14 @@
     sw.style.background = c.hex;
     sw.style.color = L.pickTextColor(c);
     sw.textContent = c.code;
-    el.querySelector('.cp-name').textContent = officialName(c);
+    // 官方名恆為主名，且**一律走 lib**（`L.officialName`）——這裡曾經有一份自己的
+    // 複製，於是第三個色號空間（EF600，原廠不發佈色名）進來時它認不得 'none'、
+    // 卡片顯示空白。**同一條規則不要有第二份實作。**
+    var nm = L.officialName(c);
+    el.querySelector('.cp-name').textContent = nm || t('note.noName', '原廠不發佈色名');
+    el.querySelector('.cp-name').classList.toggle('is-noname', !nm);
     el.querySelector('.cp-hex').textContent = c.hex;
-    el.title = c.code + ' ' + officialName(c);
+    el.title = nm ? c.code + ' ' + nm : c.code;
     el.addEventListener('click', function () { openDetail(c); });
     return el;
   }

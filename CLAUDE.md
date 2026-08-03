@@ -1,8 +1,9 @@
 # finecolour-color — Session 起手 context
 
-> 版本 v1.1｜最後更新 2026-08-02
+> 版本 v1.2｜最後更新 2026-08-03
 
 Finecolour（法卡勒）色號 → CSS 對照。家族**第四支色彩 registry**、第三支雙頁 app。
+**三個色號空間**：麥克筆 480 ／彩針筆 48 ／壓克力筆 120，共 648 色。
 零後端資料庫、public repo、`clone` 下來 `npm start` 就能跑。
 
 ## 動手前必讀
@@ -34,10 +35,14 @@ public/apps/finecolour-color/
    `db_artcolor` 匯出。要改資料就去改 DB 再跑 `--write`，然後 `--check` 確認逐位元組相同。
    **手改產物＝下次匯出被蓋掉，而且庫與 repo 從此不一致。**
 
-2. **主名一律走 `L.officialName(color)`，不可直接讀 `.name`。**
-   官方名不一定是英文——麥克筆 480 色的色譜是英文的、彩針筆 48 色的是中文的，
-   靠資料的 `official` 欄（`'en'`／`'zh'`）決定。直接讀 `.name` 會讓彩針筆顯示成
-   我們這邊的譯名，**拿去問賣家對不到任何東西**。譯名走 `L.localName(color, lang)`。
+2. **主名一律走 `L.officialName(color)`，不可直接讀 `.name`，也不可自己再寫一份。**
+   官方名不一定是英文——麥克筆的色譜是英文的、彩針筆的是中文的、
+   **壓克力筆（EF600）根本沒有色名**，靠資料的 `official` 欄（`'en'`／`'zh'`／`'none'`）決定。
+   直接讀 `.name` 會讓彩針筆顯示成我們這邊的譯名，**拿去問賣家對不到任何東西**；
+   `'none'` 時要用 `L.hasOfficialName()` 判斷並**明講「原廠不發佈色名」**，不可留白
+   ——留白會被讀成「我們沒抽到」。譯名走 `L.localName(color, lang)`。
+   ⚠️ 控制器裡曾經有一份自己的 `officialName` 複製，第三個色號空間進來時它認不得
+   `'none'`、卡片顯示空白。**同一條規則不要有第二份實作。**
 
 3. **兩類 chips 的視覺不可混用**（§5.13）：色系是**分組**（單選、無勾號、自備「全部」那顆），
    產品線是**篩選**（多選、帶勾號、可全部取消）。搜尋時分組 bar 要收起。
@@ -66,9 +71,10 @@ npm start   # → http://localhost:3000/apps/finecolour-color/
 ```
 
 - `/` 302 → `/apps/finecolour-color/`；資產 200；API 404 回 JSON
-- 色系 chips 25 顆（全部 ＋ 23 色系 ＋ 彩針筆）、產品線 chips 5 顆且帶勾號
-- 明細卡：marker 主名英文＋中文輔助行；**fineliner 主名中文、輔助行隱藏**
-- `sets.html` 51 組、314 列；系列列顯示「系列」而非「子系列」
+- 色系 chips 26 顆（全部 ＋ 23 色系 ＋ 彩針筆 ＋ 壓克力筆）、產品線 chips 6 顆且帶勾號
+- 明細卡：marker 主名英文＋中文輔助行；**fineliner 主名中文、輔助行隱藏**；
+  **acrylic 主名為色號、輔助行寫「原廠不發佈色名」**
+- `sets.html` 63 組、434 列；系列列顯示「系列」而非「子系列」
 - **選一個套組後只有 1 欄被標成選中**（見下面第 4 條）
-- 三語切換、light/dark 切換、`nearestFinecolour` 預設只比 marker
+- 三語切換、light/dark 切換、**`nearestFinecolour` 預設只比 marker**（壓克力是不透明媒材，混進酒精麥克筆的推薦會誤導）
 - 原始碼不得含 NUL 位元組（家族稽核，見 SHARED_LIBRARY_GUIDELINES §6）

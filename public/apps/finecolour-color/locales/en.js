@@ -2,7 +2,7 @@
 I18n.register('en', {
   'title.page': 'Finecolour Color → CSS',
   'app.title': 'Finecolour codes → CSS',
-  'app.sub': 'Browse 528 colours by family and product line; swatches sampled from the official leaflets, screen approximation',
+  'app.sub': 'Browse 648 colours by family and product line; swatches sampled from the official charts and set images, screen approximation',
 
   'search.placeholder': 'code or colour name…',
   'search.empty': 'No matching colour',
@@ -32,6 +32,9 @@ I18n.register('en', {
   'band.far': 'far',
 
   'group.fineliner': 'Fineliner',
+  'group.acrylic': 'Acrylic',
+  'note.noName': 'The manufacturer publishes no colour names',
+  'note.approxAcrylic': 'Hex sampled from the official set charts on a reseller product page; screen approximation only. This line is made by Finecolour (Shanghai); the manufacturer site publishes no colour chart for it.',
   'detail.space': 'Code space',
   'detail.num': 'Number',
   'detail.noFamily': 'Fineliners are outside the marker family grouping, and the maker publishes Chinese names only',

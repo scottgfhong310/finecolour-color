@@ -2,7 +2,7 @@
 
 > [English](README.md) ｜ [繁體中文](README.zh-Hant.md) ｜ [日本語](README.ja.md)
 
-Finecolour のマーカーとファインライナーの色番号 → CSS 変数の対照。**528 色**を色系と
+Finecolour のマーカー・ファインライナー・アクリルの色番号 → CSS 変数の対照。**648 色**を色系と
 プロダクトラインで閲覧でき、**43 セットの収録対照表**も備えています。
 
 GitHub Pages とは非互換です（フロントエンドが絶対パスで資産を取得するため、本プロジェクトの
@@ -10,7 +10,7 @@ Node サーバーが必要）。
 
 ## 機能
 
-- **528 色・2 つの番号体系**：マーカー 480 色（`BV321` のように色系接頭辞＋番号、0–479 は
+- **648 色・3 つの番号体系**：マーカー 480 色（`BV321` のように色系接頭辞＋番号、0–479 は
   ブランド内で一意）とファインライナー 48 色（`02`／`03`、独立した番号体系）。
 - **プロダクトライン別の収録**：EF100／EF101／EF102／EF103／EF300 のどの世代に実際に
   収録されているか——フィルターでき、詳細カードにも列挙されます。
@@ -40,7 +40,7 @@ public/apps/finecolour-color/
   finecolour-color-lib.js                コアライブラリ、DOM に触れない（window.FinecolourColorLib）
   sets.html · sets.css · sets.js         セット収録対照表
   colour-detail.js · nearest-panel.js    両ページ共用
-  data/finecolour-colors.js              528 色 ＋ 23 色系 ＋ meta
+  data/finecolour-colors.js              648 色 ＋ 23 色系 ＋ meta
   data/finecolour-sets.js                43 セット
 ```
 

@@ -157,6 +157,13 @@
   // ---- 內容 ---------------------------------------------------------------
   // 列＝色。未選基準組時列出「可見套組收錄過的所有色」（依色號正序）；
   // 選了基準組就把不在它裡面的列藏起來（同 FC：藏而不重建，捲動位置與 DOM 都穩定）。
+  function nameCell(c) {
+    var nm = c ? L.officialName(c) : '';
+    if (nm) return '<span class="cname" title="' + esc(nm) + '">' + esc(nm) + '</span>';
+    var why = c && !L.hasOfficialName(c) ? t('note.noName', '原廠不發佈色名') : '';
+    return '<span class="cname is-noname" title="' + esc(why) + '">' + (why ? '—' : '') + '</span>';
+  }
+
   function bodyHtml(cols, rows) {
     return '<tbody>' + rows.map(function (r) {
       var c = byCode[r.code];
@@ -173,8 +180,9 @@
             esc(r.code) + '</span>' +
           // 官方名恆為主名——哪個語言是官方的因色號空間而異（marker 英文／fineliner 中文），
           // 故走 lib 的 officialName()，不可直接讀 .name（見 DESIGN_GUIDELINES §6.2）。
-          '<span class="cname" title="' + esc(L.officialName(c)) + '">' +
-            esc(L.officialName(c)) + '</span>' +
+          // ⚠️ 壓克力筆原廠不發佈色名：這一欄留白 120 列會被讀成「沒抽到」，
+          // 故填一個減號並把說明放進 title——**明講，但不要在密集表格裡重複 120 次**。
+          nameCell(c) +
         '</span></th>' + cells + '</tr>';
     }).join('') + '</tbody>';
   }

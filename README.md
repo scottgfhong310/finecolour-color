@@ -2,7 +2,7 @@
 
 > [English](README.md) ｜ [繁體中文](README.zh-Hant.md) ｜ [日本語](README.ja.md)
 
-Finecolour marker and fineliner colour codes → CSS variables. **528 colours** browsable by
+Finecolour marker, fineliner and acrylic colour codes → CSS variables. **648 colours** browsable by
 colour family and by product line, plus a **43-assortment coverage table**.
 
 Not compatible with GitHub Pages: the front end fetches its assets from the site root, so it
@@ -10,11 +10,11 @@ needs this project's Node server.
 
 ## Features
 
-- **528 colours in two code spaces.** 480 markers (family-prefixed codes such as `BV321`,
+- **648 colours in three code spaces.** 480 markers (family-prefixed codes such as `BV321`,
   numbered 0–479 and unique brand-wide) and 48 fineliners (`02`, `03`, a separate numbering).
 - **Product-line availability.** Which of EF100 / EF101 / EF102 / EF103 / EF300 actually
   carries a colour — filter by it, or read it off the detail card.
-- **43 assortments**, including eight professional series (landscape, interior, architecture,
+- **63 assortments**, including eight professional series (landscape, interior, architecture,
   environmental art, fashion, anime, industrial design, exam sketching) and skin-tone sets.
 - **The official name is always the primary one — and it is not always English.** The marker
   chart is in English, the fineliner chart is in Chinese. Each colour carries `official`
@@ -40,8 +40,8 @@ public/apps/finecolour-color/
   finecolour-color-lib.js                core library, no DOM (window.FinecolourColorLib)
   sets.html · sets.css · sets.js         assortment coverage table
   colour-detail.js · nearest-panel.js    shared across both pages
-  data/finecolour-colors.js              528 colours + 23 families + meta
-  data/finecolour-sets.js                43 assortments
+  data/finecolour-colors.js              648 colours + 23 families + meta
+  data/finecolour-sets.js                63 assortments
 ```
 
 ## Data
