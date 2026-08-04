@@ -38,9 +38,16 @@
     { space: ACRYLIC, key: 'group.acrylic', fb: '壓克力筆' }
   ];
 
+  function hueOrAll(v) {
+    return (v && v !== 'all' && L.FAMILY_ORDER.indexOf(v) >= 0) ? v : 'all';
+  }
+
   var state = {
     group: localStorage.getItem(KEY_GROUP) || 'all',   // 'all' | 色系 code | 'fineliner' | 'acrylic'
-    hue: localStorage.getItem(KEY_HUE) || 'all',       // 只在 group === 'acrylic' 時有作用
+    // 只在 group === 'acrylic' 時有作用。
+    // ⚠️ 認不得的值一律當 'all'——分群鍵改過名（violet/pink → purple/magenta），
+    // 舊的 localStorage 值若原樣沿用會**匹配不到任何色、靜默顯示 0 張**。
+    hue: hueOrAll(localStorage.getItem(KEY_HUE)),
     lines: (localStorage.getItem(KEY_LINES) || '').split(',').filter(Boolean),
     q: ''
   };
@@ -67,7 +74,7 @@
     if (state.group === ACRYLIC) {
       return COLORS.filter(function (c) {
         return c.space === ACRYLIC
-          && (state.hue === 'all' || L.hueGroupOf(c) === state.hue);
+          && (state.hue === 'all' || L.colorFamily(c) === state.hue);
       });
     }
     if (state.group === FINELINER) {
@@ -133,8 +140,8 @@
     var pool = COLORS.filter(function (c) { return c.space === ACRYLIC; });
     $hue.appendChild(chipNode('fam-chip', t('hue.all', '全部'), t('hue.all', '全部'),
       pool.length, state.hue === 'all', function () { pickHue('all'); }));
-    L.hueGroupKeys().forEach(function (k) {
-      var n = pool.filter(function (c) { return L.hueGroupOf(c) === k; }).length;
+    L.FAMILY_ORDER.forEach(function (k) {
+      var n = pool.filter(function (c) { return L.colorFamily(c) === k; }).length;
       if (!n) return;
       var label = t('hue.' + k, k);
       $hue.appendChild(chipNode('fam-chip', label, label, n,
