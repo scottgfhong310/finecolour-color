@@ -66,6 +66,7 @@ public/apps/finecolour-color/
 | `side-tool.css` / `side-tool.js` | 家族 repo 根 |
 | `filter-clear.css` / `filter-clear.js` | 以 `local-reader` 那份為準 |
 | `i18n.js` | 家族 repo 根 |
+| `color-family.js` | 家族 repo `nodeapp-webapp-family/color-family.js`（§4 A 類權威版，byte-identical）。**色系分群的單一權威規則**；本 app 的 lib 只包一層薄的 `colorFamily()` 把無彩度門檻寫在那裡。⚠️ `<script>` 必須早於用到它的 lib |
 
 `colour-detail.js`／`nearest-panel.js` 是**本 repo 內**的跨頁共用模組（不是家族共用件），
 形制與另外三支色彩 app 一致但各自維護。
