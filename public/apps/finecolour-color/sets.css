@@ -78,6 +78,9 @@
 .assort thead .r-subset th { top: calc(var(--head-h, 0px) + var(--h-line)); height: var(--h-subset); }
 .assort thead .r-sidx th   { top: calc(var(--head-h, 0px) + var(--h-line) + var(--h-subset)); height: var(--h-sidx); }
 .assort thead .r-size th   { top: calc(var(--head-h, 0px) + var(--h-line) + var(--h-subset) + var(--h-sidx)); height: var(--h-size); }
+/* 列標籤是 <th>（rowspanLabel 產出）、資料格是 <td>，兩者都要給 top——只寫 td 的話
+   標籤不黏、會自己捲走，該位置破一個洞讓 body 列透出來。 */
+.assort thead .r-gap th,
 .assort thead .r-gap td    { top: calc(var(--head-h, 0px) + var(--h-line) + var(--h-subset) + var(--h-sidx) + var(--h-size)); height: var(--h-size); }
 
 /* 分組格之間畫豎線，段落才看得出來（產品線、子系列各一層） */
