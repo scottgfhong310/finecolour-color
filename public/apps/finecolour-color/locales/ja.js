@@ -14,6 +14,7 @@ I18n.register('ja', {
   'tool.download': 'finecolour_colors.css をダウンロード',
   'tool.mode': 'ライト / ダーク切替',
   'tool.lang': '言語',
+  'tool.more': 'その他のツール',
 
   'css.title': 'CSS 変数 + ユーティリティクラス',
   'css.sub': '色、<code>:root</code> 変数とユーティリティクラスを含む',

@@ -14,6 +14,7 @@ I18n.register('zh-Hant', {
   'tool.download': '下載 finecolour_colors.css',
   'tool.mode': '切換 light / dark',
   'tool.lang': '語言',
+  'tool.more': '更多工具',
 
   'css.title': 'CSS 變數 + utility classes',
   'css.sub': '色，含 <code>:root</code> 變數與 utility classes',

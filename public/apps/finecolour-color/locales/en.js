@@ -14,6 +14,7 @@ I18n.register('en', {
   'tool.download': 'Download finecolour_colors.css',
   'tool.mode': 'Toggle light / dark',
   'tool.lang': 'Language',
+  'tool.more': 'More tools',
 
   'css.title': 'CSS variables + utility classes',
   'css.sub': 'colours, with <code>:root</code> variables and utility classes',
