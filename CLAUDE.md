@@ -71,6 +71,13 @@ public/apps/finecolour-color/
 `colour-detail.js`／`nearest-panel.js` 是**本 repo 內**的跨頁共用模組（不是家族共用件），
 形制與另外三支色彩 app 一致但各自維護。
 
+**本 app 是別人的上游**：`color-palette`／`thangka-trace`／`color-mixer` 借走
+`finecolour-color-lib.js` ＋ `data/finecolour-colors.js` 做 `nearestFinecolour`
+（`color-mixer` 於 2026-08-07 接上，是第三個消費端）。**改了 lib 或資料就要跑**
+`bash scripts/sync-copies.sh`——它同步 InProgress 鏡像與三支消費端（含各自的鏡像），
+並以 md5 驗**八份**複製件是不是單一 hash。
+**權威版改了、複製點沒跟上，沒有任何東西會報錯。**
+
 ## 驗證（不靠肉眼猜）
 
 ```bash
