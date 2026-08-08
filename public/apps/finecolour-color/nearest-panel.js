@@ -157,7 +157,9 @@
     var $out = document.getElementById('nearest-result');
     if (!$out) return;
     var rgb = L.hexToRgb(document.getElementById('nearest-hex').value);
-    if (isNaN(rgb.r)) return;
+    // hexToRgb 現在由共用件 color-metric.js 提供，**壞輸入一律回 null**
+    // （抽出前這支 lib 的寬鬆版永不回 null，故此處原本寫 isNaN(rgb.r)）。
+    if (!rgb) return;
     var line = document.getElementById('nearest-line').value;
     var res = L.nearestFinecolour(rgb, { n: NEAR_N, line: line || undefined, colors: colors() });
     $out.innerHTML = '';
