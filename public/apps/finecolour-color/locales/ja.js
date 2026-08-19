@@ -12,6 +12,7 @@ I18n.register('ja', {
   'tool.sets': 'セット収録対照（別タブ）',
   'tool.css': 'CSS 全体を表示 / コピー',
   'tool.download': 'finecolour_colors.css をダウンロード',
+  'tool.clearFilter': 'クリア',
   'tool.mode': 'ライト / ダーク切替',
   'tool.lang': '言語',
   'tool.more': 'その他のツール',

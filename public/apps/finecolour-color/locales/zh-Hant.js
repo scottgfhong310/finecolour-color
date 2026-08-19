@@ -12,6 +12,7 @@ I18n.register('zh-Hant', {
   'tool.sets': '套組收錄對照（另開分頁）',
   'tool.css': '檢視 / 複製整份 CSS',
   'tool.download': '下載 finecolour_colors.css',
+  'tool.clearFilter': '清除',
   'tool.mode': '切換 light / dark',
   'tool.lang': '語言',
   'tool.more': '更多工具',

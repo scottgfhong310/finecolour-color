@@ -12,6 +12,7 @@ I18n.register('en', {
   'tool.sets': 'Assortment coverage (new tab)',
   'tool.css': 'View / copy the whole CSS',
   'tool.download': 'Download finecolour_colors.css',
+  'tool.clearFilter': 'Clear',
   'tool.mode': 'Toggle light / dark',
   'tool.lang': 'Language',
   'tool.more': 'More tools',
