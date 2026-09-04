@@ -6,10 +6,20 @@
   "scripts": {
     "start": "node app.js"
   },
-  "keywords": ["finecolour", "marker", "color", "colour", "css", "palette", "reference", "express", "materialize"],
+  "keywords": [
+    "finecolour",
+    "marker",
+    "color",
+    "colour",
+    "css",
+    "palette",
+    "reference",
+    "express",
+    "materialize"
+  ],
   "license": "MIT",
   "dependencies": {
-    "express": "^4.21.2",
+    "express": "^5.2.1",
     "morgan": "^1.10.0"
   }
 }
