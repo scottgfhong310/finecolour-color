@@ -80,7 +80,7 @@ I18n.register('ja', {
   'sets.foot': 'サイズをクリック＝そのセットの色だけを残す（再クリックで解除）。左端の色番号をクリックすると詳細。上のタブで製品ラインを絞り込み、再クリックで 3 ライン並列に戻ります。',
 
   'toast.copied': 'コピーしました',
-  'toast.copyFail': 'コピーに失敗しました（localhost または HTTPS が必要）',
+  'toast.copyFail': 'コピーに失敗しました',
   'toast.pasted': '貼り付けました：{v}',
   'toast.pasteFail': 'クリップボードを読み取れません（許可されていません）——フィールドに \u2318V で直接貼り付けてください',
   'toast.pasteNoColor': 'クリップボードに色が見つかりません',

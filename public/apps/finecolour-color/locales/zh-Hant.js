@@ -80,7 +80,7 @@ I18n.register('zh-Hant', {
   'sets.foot': '點欄位的尺寸＝只留下該套組收錄的色（再點一次取消）；點左欄的色號開明細。上方切換產品線＝只留那一段，再點一次回到三線並排。',
 
   'toast.copied': '已複製',
-  'toast.copyFail': '複製失敗（需 localhost 或 HTTPS）',
+  'toast.copyFail': '複製失敗',
   'toast.pasted': '已貼上：{v}',
   'toast.pasteFail': '無法讀取剪貼簿（瀏覽器未授權）——可直接在欄位按 ⌘V 貼上',
   'toast.pasteNoColor': '剪貼簿裡沒有可辨識的顏色',

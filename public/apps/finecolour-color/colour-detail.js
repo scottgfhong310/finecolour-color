@@ -100,7 +100,7 @@
         setTimeout(function () { b.classList.remove('copied'); }, 1200);
         M.toast({ html: t('toast.copied', '已複製') + '：' + esc(v), displayLength: 1400 });
       }).catch(function () {
-        M.toast({ html: t('toast.copyFail', '複製失敗（需 localhost 或 HTTPS）'), classes: 'red' });
+        M.toast({ html: t('toast.copyFail', '複製失敗'), classes: 'red' });
       });
     });
     return b;

@@ -80,7 +80,7 @@ I18n.register('en', {
   'sets.foot': 'Click a size to keep only that set\u2019s colours (click again to clear); click a code on the left for details. The tabs above keep a single product line \u2014 click again for all three.',
 
   'toast.copied': 'Copied',
-  'toast.copyFail': 'Copy failed (needs localhost or HTTPS)',
+  'toast.copyFail': 'Copy failed',
   'toast.pasted': 'Pasted: {v}',
   'toast.pasteFail': "Can't read the clipboard (permission denied) — paste into the field with \u2318V instead",
   'toast.pasteNoColor': 'No colour found in the clipboard',
