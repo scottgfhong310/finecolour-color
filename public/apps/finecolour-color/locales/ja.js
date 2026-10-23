@@ -82,7 +82,7 @@ I18n.register('ja', {
   'toast.copied': 'コピーしました',
   'toast.copyFail': 'コピーに失敗しました',
   'toast.pasted': '貼り付けました：{v}',
-  'toast.pasteFail': 'クリップボードを読み取れません（許可されていません）——フィールドに \u2318V で直接貼り付けてください',
+  'toast.pasteSelected': 'ブラウザがクリップボードの読み取りを拒否したため選択しました——⌘V／Ctrl+V で上書きできます',
   'toast.pasteNoColor': 'クリップボードに色が見つかりません',
   'toast.lang': '{name} に切り替えました',
   'toast.downloaded': 'ダウンロード：{n}'

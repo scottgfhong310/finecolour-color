@@ -65,21 +65,28 @@
   }
 
   function pasteFromClipboard() {
-    var fail = function () {
-      M.toast({ html: t('toast.pasteFail', '無法讀取剪貼簿（瀏覽器未授權）'), classes: 'red' });
+    // 讀不到剪貼簿（非 HTTPS／非 localhost、或權限被拒）就退一步：把欄位整段選起來交給使用者按 ⌘V，
+    // 由欄位上的 paste 事件接手（同一支 applyPastedText ⇒ 結果與這條路相同）。照 web-launcher 的 pasteField。
+    var manual = function () {
+      var el = document.getElementById('nearest-hex');
+      el.focus();
+      try { el.select(); } catch (e) {}
+      M.toast({ html: t('toast.pasteSelected', '瀏覽器不讓程式讀剪貼簿，已幫你選起來——按 ⌘V／Ctrl+V 即可覆蓋'), classes: 'orange' });
     };
-    if (!navigator.clipboard || !navigator.clipboard.readText) return fail();
-    navigator.clipboard.readText().then(function (txt) {
-      var hex = parseColorText(txt);
-      if (!hex) {
-        M.toast({ html: t('toast.pasteNoColor', '剪貼簿裡沒有可辨識的顏色'), classes: 'orange' });
-        return;
-      }
-      document.getElementById('nearest-hex').value = hex;
-      document.getElementById('nearest-input').value = hex;
-      render();
-      M.toast({ html: tp('toast.pasted', { v: hex }, '已貼上：' + hex), displayLength: 1400 });
-    }).catch(fail);
+    if (!navigator.clipboard || !navigator.clipboard.readText) return manual();
+    navigator.clipboard.readText().then(applyPastedText).catch(manual);
+  }
+
+  function applyPastedText(txt) {
+    var hex = parseColorText(txt);
+    if (!hex) {
+      M.toast({ html: t('toast.pasteNoColor', '剪貼簿裡沒有可辨識的顏色'), classes: 'orange' });
+      return;
+    }
+    document.getElementById('nearest-hex').value = hex;
+    document.getElementById('nearest-input').value = hex;
+    render();
+    M.toast({ html: tp('toast.pasted', { v: hex }, '已貼上：' + hex), displayLength: 1400 });
   }
 
   var MARKUP =
@@ -193,6 +200,14 @@
     });
     document.getElementById('nearest-line').addEventListener('change', render);
     document.getElementById('nearest-paste').addEventListener('click', pasteFromClipboard);
+    // 使用者自己按 ⌘V／Ctrl+V（任何網址下都有效）：認得出顏色就走貼上鈕同一條路；
+    // 認不出就交給瀏覽器照常貼上，不擋手動編輯
+    $hex.addEventListener('paste', function (e) {
+      var txt = e.clipboardData ? e.clipboardData.getData('text') : '';
+      if (!txt || !parseColorText(txt)) return;
+      e.preventDefault();
+      applyPastedText(txt);
+    });
 
     if (global.I18n && global.I18n.apply) global.I18n.apply(el);
   }
